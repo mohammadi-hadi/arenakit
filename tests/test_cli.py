@@ -79,7 +79,21 @@ def test_audit_command_can_fail_the_build(battles_csv):
 
 def test_demo_command_regenerates_everything(tmp_path):
     out = tmp_path / "results"
-    assert main(["demo", "--out", str(out), "--resamples", str(FAST)]) == 0
+    # --readme points into tmp_path: a test must never write into the repo.
+    assert (
+        main(
+            [
+                "demo",
+                "--out",
+                str(out),
+                "--resamples",
+                str(FAST),
+                "--readme",
+                str(tmp_path / "README.md"),
+            ]
+        )
+        == 0
+    )
     assert (out / "table.md").read_text().startswith("| Board |")
     assert "as planted" in (out / "report.md").read_text()
     summary = json.loads((out / "demo.json").read_text())
