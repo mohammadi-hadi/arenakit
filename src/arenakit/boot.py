@@ -153,6 +153,33 @@ def bootstrap(
     )
 
 
+def bootstrap_values(
+    arena: Arena,
+    statistic: Callable[[PairCounts], float],
+    n_resamples: int = N_RESAMPLES,
+    seed: int = SEED,
+    cluster: Cluster = "battle",
+) -> np.ndarray:
+    """Resample an arena and evaluate a scalar statistic on each resample."""
+    sampler = _Sampler(arena, cluster)
+    rng = np.random.Generator(np.random.PCG64(seed))
+    values: list[float] = []
+    for _ in range(n_resamples):
+        try:
+            values.append(float(statistic(sampler.counts(sampler.weights(rng)))))
+        except Exception:  # noqa: BLE001 - a degenerate resample is data, not a bug
+            continue
+    if not values:
+        raise RuntimeError("every bootstrap resample failed")
+    return np.array(values, dtype=float)
+
+
+def percentile_ci(values: np.ndarray, level: float = 1 - ALPHA) -> tuple[float, float]:
+    """Percentile interval of a bootstrap sample."""
+    lo = (1 - level) / 2 * 100
+    return (float(np.percentile(values, lo)), float(np.percentile(values, 100 - lo)))
+
+
 @dataclass(frozen=True)
 class Separation:
     """Which adjacent rank gaps the data actually supports."""
@@ -192,9 +219,7 @@ class Separation:
         return groups
 
 
-def separation(
-    boot: BootstrapResult, models: list[str], alpha: float = ALPHA
-) -> Separation:
+def separation(boot: BootstrapResult, models: list[str], alpha: float = ALPHA) -> Separation:
     """Test every adjacent pair on the fitted board.
 
     The direction of each comparison is taken from the point estimate, so the
@@ -225,6 +250,7 @@ def separation(
                 "gap": float(gap[k]),
                 "se": float(se[k]),
                 "t": float(observed[k]),
+                "critical_marginal": float(crit_marginal[k]),
                 "resolved_marginal": bool(ok and observed[k] > crit_marginal[k]),
                 "resolved_simultaneous": bool(ok and observed[k] > crit_sim),
             }

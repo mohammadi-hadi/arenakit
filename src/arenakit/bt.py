@@ -51,6 +51,49 @@ class ConvergenceError(RuntimeError):
     """Raised when an MM fit hits :data:`MAX_ITER` without converging."""
 
 
+class DisconnectedBoardError(ValueError):
+    """Raised when the models fall into groups that never met.
+
+    Two models joined by no chain of opponents have no estimable difference:
+    the likelihood is flat in the direction that separates their groups, and
+    any number the fit prints for that gap comes from the prior, not the data.
+    Audit one component at a time - :func:`arenakit.probes.run_audit` does this
+    automatically and reports what it dropped.
+    """
+
+
+def components(comparisons: np.ndarray) -> list[list[int]]:
+    """Connected components of a symmetric comparison-count matrix, largest first."""
+    n = comparisons.shape[0]
+    adjacency = comparisons > 0
+    seen = np.zeros(n, dtype=bool)
+    found: list[list[int]] = []
+    for start in range(n):
+        if seen[start]:
+            continue
+        stack, group = [start], []
+        seen[start] = True
+        while stack:
+            node = stack.pop()
+            group.append(node)
+            for nxt in np.flatnonzero(adjacency[node] & ~seen).tolist():
+                seen[nxt] = True
+                stack.append(nxt)
+        found.append(sorted(group))
+    found.sort(key=len, reverse=True)
+    return found
+
+
+def _require_connected(counts: PairCounts) -> None:
+    groups = components(counts.comparisons)
+    if len(groups) > 1:
+        sizes = ", ".join(str(len(g)) for g in groups)
+        raise DisconnectedBoardError(
+            f"the {counts.n_models} models fall into {len(groups)} groups that never "
+            f"met (sizes {sizes}); differences across groups are not estimable"
+        )
+
+
 @dataclass(frozen=True)
 class BTFit:
     """A fitted leaderboard.
@@ -118,6 +161,7 @@ def fit_bt(
     """
     if ties not in ("half", "drop"):
         raise ValueError(f"unknown tie rule {ties!r}")
+    _require_connected(counts)
     return _fit_ordered(counts, ties, prior) if order else _fit_plain(counts, ties, prior)
 
 
@@ -193,6 +237,7 @@ def fit_rao_kupper(counts: PairCounts, prior: float = PRIOR_BATTLES) -> BTFit:
     rather than half a win. When there are no ties this reduces exactly to
     :func:`fit_bt` with ``ties="drop"``.
     """
+    _require_connected(counts)
     wins = counts.wins
     tied = counts.ties
     n = counts.n_models

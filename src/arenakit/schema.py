@@ -261,6 +261,31 @@ class Arena:
         found.sort(key=len, reverse=True)
         return found
 
+    def restrict(self, keep_models: Sequence[int]) -> Arena:
+        """A new arena over a subset of models, dropping battles that leave it.
+
+        Used to audit one connected component of a board whose models did not
+        all meet each other.
+        """
+        keep = sorted(set(int(i) for i in keep_models))
+        if not keep:
+            raise ValueError("cannot restrict to an empty set of models")
+        wanted = np.zeros(self.n_models, dtype=bool)
+        wanted[keep] = True
+        mask = wanted[self.a] & wanted[self.b]
+        if not mask.any():
+            raise ValueError("no battles survive the restriction")
+        remap = np.full(self.n_models, -1, dtype=np.int32)
+        remap[keep] = np.arange(len(keep), dtype=np.int32)
+        clone = object.__new__(Arena)
+        clone.models = [self.models[i] for i in keep]
+        clone.a = remap[self.a[mask]]
+        clone.b = remap[self.b[mask]]
+        clone.y = self.y[mask]
+        clone.item = None if self.item is None else _recode(self.item[mask])
+        clone.voter = None if self.voter is None else _recode(self.voter[mask])
+        return clone
+
     def subset(self, mask: np.ndarray) -> Arena:
         """A new arena over a boolean battle mask, keeping the model order."""
         keep = np.asarray(mask, dtype=bool)
@@ -277,11 +302,11 @@ class Arena:
 
 
 def _label_codes(labels: Sequence[str | None]) -> np.ndarray | None:
-    if any(label is None for label in labels):
+    present = [label for label in labels if label is not None]
+    if len(present) != len(labels):
         return None
-    uniq = sorted(set(labels))  # type: ignore[arg-type]
-    index = {label: i for i, label in enumerate(uniq)}
-    return np.array([index[label] for label in labels], dtype=np.int64)
+    index = {label: i for i, label in enumerate(sorted(set(present)))}
+    return np.array([index[label] for label in present], dtype=np.int64)
 
 
 def _recode(codes: np.ndarray) -> np.ndarray:

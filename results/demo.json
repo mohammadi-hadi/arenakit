@@ -1,0 +1,89 @@
+{
+  "a-few-power-voters": {
+    "expect": [
+      "separation",
+      "vote_clustering"
+    ],
+    "flags": [
+      "separation",
+      "vote_clustering"
+    ],
+    "matches": true
+  },
+  "draw-prone-model": {
+    "expect": [
+      "tie_convention"
+    ],
+    "flags": [
+      "tie_convention"
+    ],
+    "matches": true
+  },
+  "even-board": {
+    "expect": [],
+    "flags": [],
+    "matches": true
+  },
+  "first-slot-favoured": {
+    "expect": [
+      "position_bias",
+      "position_reordering"
+    ],
+    "flags": [
+      "position_bias",
+      "position_reordering"
+    ],
+    "matches": true
+  },
+  "lopsided-budget": {
+    "expect": [
+      "coverage_imbalance"
+    ],
+    "flags": [
+      "coverage_imbalance"
+    ],
+    "matches": true
+  },
+  "one-loud-annotator": {
+    "expect": [
+      "annotator_influence",
+      "separation",
+      "vote_clustering"
+    ],
+    "flags": [
+      "annotator_influence",
+      "separation",
+      "vote_clustering"
+    ],
+    "matches": true
+  },
+  "rock-paper-scissors": {
+    "expect": [
+      "intransitivity"
+    ],
+    "flags": [
+      "intransitivity"
+    ],
+    "matches": true
+  },
+  "too-few-votes": {
+    "expect": [
+      "separation",
+      "rank_volatility"
+    ],
+    "flags": [
+      "rank_volatility",
+      "separation"
+    ],
+    "matches": true
+  },
+  "two-separate-pools": {
+    "expect": [
+      "connectivity"
+    ],
+    "flags": [
+      "connectivity"
+    ],
+    "matches": true
+  }
+}
