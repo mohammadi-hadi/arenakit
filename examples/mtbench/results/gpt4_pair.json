@@ -1,0 +1,398 @@
+{
+  "flags": [
+    "vote_clustering"
+  ],
+  "leaderboard": [
+    {
+      "battles": 800,
+      "elo": 1314.0654866877248,
+      "model": "gpt-4",
+      "rank": 1,
+      "rank_ci": [
+        1,
+        1
+      ],
+      "score": 1.8079062696776875,
+      "score_ci": [
+        1.6372965227985463,
+        2.0061117452321304
+      ]
+    },
+    {
+      "battles": 800,
+      "elo": 1171.628285365482,
+      "model": "claude-v1",
+      "rank": 2,
+      "rank_ci": [
+        2,
+        2
+      ],
+      "score": 0.987971828546718,
+      "score_ci": [
+        0.7965226047671634,
+        1.211459624455917
+      ]
+    },
+    {
+      "battles": 800,
+      "elo": 1091.2281357076827,
+      "model": "gpt-3.5-turbo",
+      "rank": 3,
+      "rank_ci": [
+        3,
+        3
+      ],
+      "score": 0.5251513633553692,
+      "score_ci": [
+        0.3918752565078589,
+        0.6666051443064145
+      ]
+    },
+    {
+      "battles": 800,
+      "elo": 970.38259895304,
+      "model": "vicuna-13b-v1.2",
+      "rank": 4,
+      "rank_ci": [
+        4,
+        4
+      ],
+      "score": -0.17049146535989085,
+      "score_ci": [
+        -0.30697481503058915,
+        -0.029328592406507696
+      ]
+    },
+    {
+      "battles": 800,
+      "elo": 786.6589565583545,
+      "model": "alpaca-13b",
+      "rank": 5,
+      "rank_ci": [
+        5,
+        5
+      ],
+      "score": -1.2280897658813201,
+      "score_ci": [
+        -1.4178985328335665,
+        -1.063096719041875
+      ]
+    },
+    {
+      "battles": 800,
+      "elo": 666.0365367277161,
+      "model": "llama-13b",
+      "rank": 6,
+      "rank_ci": [
+        6,
+        6
+      ],
+      "score": -1.9224482303385637,
+      "score_ci": [
+        -2.1668563262361147,
+        -1.7179414278780454
+      ]
+    }
+  ],
+  "n_battles": 2400,
+  "n_models": 6,
+  "probes": [
+    {
+      "ci": null,
+      "detail": {
+        "critical_simultaneous": 2.584917573810958,
+        "median_battles_for_next_pair": null,
+        "n_pairs": 5,
+        "n_resolved_marginal": 5,
+        "n_resolved_simultaneous": 5,
+        "n_tiers": 6,
+        "pairs": [
+          {
+            "critical_marginal": 1.9211043191074573,
+            "gap": 0.8199344411309696,
+            "lower": "claude-v1",
+            "lower_index": 1,
+            "resolved_marginal": true,
+            "resolved_simultaneous": true,
+            "se": 0.11973619753314627,
+            "t": 6.847840987300346,
+            "upper": "gpt-4",
+            "upper_index": 3
+          },
+          {
+            "critical_marginal": 1.928813490336197,
+            "gap": 0.4628204651913488,
+            "lower": "gpt-3.5-turbo",
+            "lower_index": 2,
+            "resolved_marginal": true,
+            "resolved_simultaneous": true,
+            "se": 0.1197761947332305,
+            "t": 3.8640438212464323,
+            "upper": "claude-v1",
+            "upper_index": 1
+          },
+          {
+            "critical_marginal": 1.9948127460575105,
+            "gap": 0.6956428287152601,
+            "lower": "vicuna-13b-v1.2",
+            "lower_index": 5,
+            "resolved_marginal": true,
+            "resolved_simultaneous": true,
+            "se": 0.11061384102265857,
+            "t": 6.288931134511113,
+            "upper": "gpt-3.5-turbo",
+            "upper_index": 2
+          },
+          {
+            "critical_marginal": 1.9453279170329967,
+            "gap": 1.0575983005214293,
+            "lower": "alpaca-13b",
+            "lower_index": 0,
+            "resolved_marginal": true,
+            "resolved_simultaneous": true,
+            "se": 0.11840534426749415,
+            "t": 8.932014910848682,
+            "upper": "vicuna-13b-v1.2",
+            "upper_index": 5
+          },
+          {
+            "critical_marginal": 1.9418297054322988,
+            "gap": 0.6943584644572436,
+            "lower": "llama-13b",
+            "lower_index": 4,
+            "resolved_marginal": true,
+            "resolved_simultaneous": true,
+            "se": 0.1085170516857016,
+            "t": 6.398611588419459,
+            "upper": "alpaca-13b",
+            "upper_index": 0
+          }
+        ],
+        "tiers": [
+          [
+            "gpt-4"
+          ],
+          [
+            "claude-v1"
+          ],
+          [
+            "gpt-3.5-turbo"
+          ],
+          [
+            "vicuna-13b-v1.2"
+          ],
+          [
+            "alpaca-13b"
+          ],
+          [
+            "llama-13b"
+          ]
+        ]
+      },
+      "innocent": [
+        0.0,
+        0.25
+      ],
+      "name": "separation",
+      "reason": "5 of 5 adjacent pairs are separated with family-wise control across the board (5 without it); the board collapses to 6 tiers",
+      "skipped": false,
+      "title": "Adjacent ranks the votes separate",
+      "triggered": false,
+      "value": 0.0
+    },
+    {
+      "ci": null,
+      "detail": {
+        "intervals": {
+          "alpaca-13b": [
+            5,
+            5
+          ],
+          "claude-v1": [
+            2,
+            2
+          ],
+          "gpt-3.5-turbo": [
+            3,
+            3
+          ],
+          "gpt-4": [
+            1,
+            1
+          ],
+          "llama-13b": [
+            6,
+            6
+          ],
+          "vicuna-13b-v1.2": [
+            4,
+            4
+          ]
+        },
+        "max_width": 1.0,
+        "median_width": 1.0,
+        "widest_model": "alpaca-13b"
+      },
+      "innocent": [
+        0.0,
+        2.0
+      ],
+      "name": "rank_volatility",
+      "reason": "the median model's 95% rank interval spans 1.0 ranks; alpaca-13b spans 1",
+      "skipped": false,
+      "title": "Width of the rank interval",
+      "triggered": false,
+      "value": 1.0
+    },
+    {
+      "ci": null,
+      "detail": {
+        "components": [
+          [
+            "alpaca-13b",
+            "claude-v1",
+            "gpt-3.5-turbo",
+            "gpt-4",
+            "llama-13b",
+            "vicuna-13b-v1.2"
+          ]
+        ],
+        "dropped_from_audit": [],
+        "failed_resamples": 0,
+        "largest_component_share": 1.0,
+        "median_battles": 800.0,
+        "min_battles": 800,
+        "n_components": 1,
+        "under_compared": []
+      },
+      "innocent": null,
+      "name": "connectivity",
+      "reason": "every model is connected to every other through a chain of opponents",
+      "skipped": false,
+      "title": "Comparability of the board",
+      "triggered": false,
+      "value": 1.0
+    },
+    {
+      "ci": null,
+      "detail": {
+        "gini": 0.0,
+        "max_battles": 800,
+        "min_battles": 800,
+        "pairs_played": 15,
+        "pairs_possible": 15
+      },
+      "innocent": [
+        0.0,
+        0.5
+      ],
+      "name": "coverage_imbalance",
+      "reason": "battles per model run from 800 to 800; 15 of 15 possible pairs were ever compared",
+      "skipped": false,
+      "title": "Evenness of the comparison budget",
+      "triggered": false,
+      "value": 0.0
+    },
+    {
+      "ci": null,
+      "detail": {
+        "both_orders_share": 0.0,
+        "forward_share": 0.4
+      },
+      "innocent": null,
+      "name": "position_bias",
+      "reason": "no model pair appears in both orderings (0% of 15 pairs do), so which model sits in the first slot is fixed per pair and cannot be told apart from the models themselves",
+      "skipped": true,
+      "title": "Advantage of being shown first",
+      "triggered": false,
+      "value": null
+    },
+    {
+      "ci": null,
+      "detail": {},
+      "innocent": null,
+      "name": "position_reordering",
+      "reason": "position is not identifiable in this data, so nothing to correct",
+      "skipped": true,
+      "title": "Order changes after correcting for position",
+      "triggered": false,
+      "value": null
+    },
+    {
+      "ci": null,
+      "detail": {
+        "rao_kupper_theta": 2.871794950179289,
+        "reversed_under_drop": [],
+        "reversed_under_rao_kupper": [],
+        "separated_pairs_at_risk": 5,
+        "tie_share": 0.25
+      },
+      "innocent": null,
+      "name": "tie_convention",
+      "reason": "ties are 25.0% of battles; 0 of the 5 separated pair(s) reverse when ties are dropped or modelled instead of split",
+      "skipped": false,
+      "title": "Order changes under another tie rule",
+      "triggered": false,
+      "value": 0.0
+    },
+    {
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "detail": {
+        "cyclic_triads": 0,
+        "decided_triads": 20,
+        "expected_share": 0.0,
+        "observed_share": 0.0
+      },
+      "innocent": [
+        -1.0,
+        0.02
+      ],
+      "name": "intransitivity",
+      "reason": "0 of 20 decided triads are cyclic (0.0%); the fitted model produces 0.0% on the same comparison budget",
+      "skipped": false,
+      "title": "Preference cycles beyond what the fit predicts",
+      "triggered": false,
+      "value": 0.0
+    },
+    {
+      "ci": null,
+      "detail": {
+        "cluster": "item",
+        "cluster_note": "only 1 distinct voters, too few to resample (needs 20)",
+        "largest_cluster": 15,
+        "n_clusters": 160,
+        "pairs_lost": 0,
+        "se_ratio": 1.4767581846081004,
+        "separated_battle_level": 5,
+        "separated_clustered": 5,
+        "top_percent_share": 0.00625
+      },
+      "innocent": [
+        0.0,
+        1.15
+      ],
+      "name": "vote_clustering",
+      "reason": "resampling items instead of battles widens standard errors by 1.48x and costs 0 separated pair(s); the busiest 1% of items account for 0.6% of votes",
+      "skipped": false,
+      "title": "Cost of pretending votes are independent",
+      "triggered": true,
+      "value": 1.4767581846081004
+    },
+    {
+      "ci": null,
+      "detail": {
+        "n_voters": 1
+      },
+      "innocent": null,
+      "name": "annotator_influence",
+      "reason": "1 annotators: leaving out one of so few is not a perturbation worth reading (this runs for 3-200)",
+      "skipped": true,
+      "title": "Largest shift from dropping one annotator",
+      "triggered": false,
+      "value": null
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "comparison": {
+    "gpt4_order": [
+      "gpt-4",
+      "claude-v1",
+      "gpt-3.5-turbo",
+      "vicuna-13b-v1.2",
+      "alpaca-13b",
+      "llama-13b"
+    ],
+    "human_order": [
+      "gpt-4",
+      "claude-v1",
+      "gpt-3.5-turbo",
+      "vicuna-13b-v1.2",
+      "alpaca-13b",
+      "llama-13b"
+    ],
+    "kendall_tau": 1.0,
+    "vote_agreement": {
+      "agreements": 1149,
+      "comparisons": 1612,
+      "rate": 0.7127791563275434
+    }
+  },
+  "gpt4_pair": {
+    "annotators": 1,
+    "flags": [
+      "vote_clustering"
+    ],
+    "labels": {
+      "model_a": 190,
+      "model_b": 1610,
+      "tie": 220,
+      "tie (inconsistent)": 380
+    },
+    "order_inconsistent": 380,
+    "order_inconsistent_share": 0.15833333333333333,
+    "pairs": 5,
+    "separated": 5,
+    "votes": 2400
+  },
+  "human": {
+    "annotators": 65,
+    "flags": [],
+    "labels": {
+      "model_a": 1293,
+      "model_b": 1282,
+      "tie": 780
+    },
+    "order_inconsistent": 0,
+    "order_inconsistent_share": 0.0,
+    "pairs": 5,
+    "separated": 4,
+    "votes": 3355
+  }
+}
