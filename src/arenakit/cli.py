@@ -22,6 +22,7 @@ from .probes import run_audit
 from .report import (
     board_figure,
     demo_table,
+    inject,
     report_markdown,
     separation_figure,
     write_json,
@@ -120,6 +121,14 @@ def _demo_command(args: argparse.Namespace) -> int:
 
     for failure in failures:
         print(f"MISMATCH {failure}", file=sys.stderr)
+    readme = Path(args.readme)
+    if readme.exists():
+        try:
+            inject(readme, demo_table(rows))
+            print(f"updated the demo table in {readme}")
+        except ValueError:
+            pass  # no markers in this README, nothing to keep in step
+
     print(f"wrote {out}/table.md, report.md, demo.json and 2 figures")
     return 1 if failures else 0
 
@@ -148,6 +157,7 @@ def build_parser() -> argparse.ArgumentParser:
     demo.add_argument("--out", default="results")
     demo.add_argument("--resamples", type=int, default=N_RESAMPLES)
     demo.add_argument("--seed", type=int, default=SEED)
+    demo.add_argument("--readme", default="README.md", help="file whose demo table is kept in step")
     demo.set_defaults(handler=_demo_command)
     return parser
 

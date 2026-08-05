@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use arenakit, please cite it as below."
+title: "arenakit: audit a pairwise model leaderboard before you trust its order"
+type: software
+authors:
+  - family-names: Mohammadi
+    given-names: Hadi
+repository-code: "https://github.com/mohammadi-hadi/arenakit"
+license: MIT
+version: 0.1.0
+date-released: 2026-08-05
