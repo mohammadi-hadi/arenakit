@@ -351,7 +351,7 @@
       "detail": {
         "cyclic_triads": 0,
         "decided_triads": 20,
-        "expected_share": 0.00030000000000000003,
+        "expected_share": 0.0002,
         "observed_share": 0.0
       },
       "innocent": [
@@ -363,7 +363,7 @@
       "skipped": false,
       "title": "Preference cycles beyond what the fit predicts",
       "triggered": false,
-      "value": -0.00030000000000000003
+      "value": -0.0002
     },
     {
       "ci": null,

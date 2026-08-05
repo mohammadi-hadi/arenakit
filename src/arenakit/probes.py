@@ -395,6 +395,14 @@ def probe_intransitivity(ctx: _Context) -> ProbeResult:
     Bradley-Terry cannot represent rock-paper-scissors. Some cycles always
     appear by chance, so the observed share is compared against the share the
     fitted model itself produces under the same comparison budget.
+
+    The null is refitted with ties dropped rather than reusing the audit's fit.
+    Cycles are read off who beat whom, so the model being tested has to be the
+    one that describes *decisive* outcomes. Half-credit ties pull every score
+    toward the middle, and a compressed board predicts far more coin-flips, and
+    so far more cycles, than the data ever had a chance to produce - which shows
+    up as a large apparent deficit of cycles that is an artefact of the tie
+    convention rather than anything about the board.
     """
     counts = ctx.arena.counts()
     wins = counts.wins
@@ -407,7 +415,15 @@ def probe_intransitivity(ctx: _Context) -> ProbeResult:
             reason=f"only {triads} fully decided triads, too few to judge cycles",
             detail={"triads": triads},
         )
-    strength = np.exp(ctx.fit.scores)
+    try:
+        strength = np.exp(fit_bt(counts, ties="drop").scores)
+    except Exception as error:  # noqa: BLE001 - decisive-only boards can fall apart
+        return ProbeResult(
+            name="intransitivity",
+            title="Preference cycles beyond what the fit predicts",
+            skipped=True,
+            reason=f"no model can be fitted to the decisive battles alone ({error})",
+        )
     decisive = wins + wins.T
     prob = strength[:, None] / (strength[:, None] + strength[None, :])
     rng = np.random.Generator(np.random.PCG64(ctx.seed))

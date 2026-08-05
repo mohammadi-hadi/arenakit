@@ -78,9 +78,9 @@ fails if a committed number differs from what the code produces.
   worth checking rather than asserting either way.
 - **38.4% of votes are ties**, and the ranking survives dropping them or
   modelling them (Rao-Kupper theta 2.35) instead of splitting them.
-- **Fewer preference cycles than Bradley-Terry predicts**: 3.5% of the 14,164
-  decided triads are cyclic against 8.6% expected. A single strength per model
-  describes this board comfortably.
+- **Preference cycles land about where Bradley-Terry expects**: 3.5% of the
+  14,164 decided triads are cyclic against 4.3% predicted. One strength per
+  model is enough to describe who beats whom on this board.
 
 ## The same six models, judged by people and by GPT-4
 

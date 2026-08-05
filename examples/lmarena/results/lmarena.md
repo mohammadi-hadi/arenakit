@@ -73,7 +73,7 @@
 | `position_bias` | -0.012 | -0.05 to 0.05 | clean |
 | `position_reordering` | 0.000 | exact | clean |
 | `tie_convention` | 0.000 | exact | clean |
-| `intransitivity` | -0.051 | -1 to 0.02 | clean |
+| `intransitivity` | -0.008 | -1 to 0.02 | clean |
 | `vote_clustering` | 1.028 | 0 to 1.15 | clean |
 | `annotator_influence` | - | - | skipped |
 
@@ -86,7 +86,7 @@
 - **Advantage of being shown first** (`position_bias`, clean) - the model shown first wins 49.5% of decisive battles (log-odds advantage -0.012)
 - **Order changes after correcting for position** (`position_reordering`, clean) - 0 of the 1 separated pair(s) reverse, and 4 model(s) change rank, once the first-position advantage is fitted out
 - **Order changes under another tie rule** (`tie_convention`, clean) - ties are 38.4% of battles; 0 of the 1 separated pair(s) reverse when ties are dropped or modelled instead of split
-- **Preference cycles beyond what the fit predicts** (`intransitivity`, clean) - 493 of 14164 decided triads are cyclic (3.5%); the fitted model produces 8.6% on the same comparison budget
+- **Preference cycles beyond what the fit predicts** (`intransitivity`, clean) - 493 of 14164 decided triads are cyclic (3.5%); the fitted model produces 4.3% on the same comparison budget
 - **Cost of pretending votes are independent** (`vote_clustering`, clean) - resampling voters instead of battles widens standard errors by 1.03x and costs 0 separated pair(s); the busiest 1% of voters account for 16.0% of votes
 - **Largest shift from dropping one annotator** (`annotator_influence`, skipped) - 49382 annotators: leaving out one of so many is not a perturbation worth reading (this runs for 3-200)
 

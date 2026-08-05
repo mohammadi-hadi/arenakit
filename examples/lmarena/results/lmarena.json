@@ -1959,13 +1959,13 @@
     },
     {
       "ci": [
-        -0.0630008782276584,
-        -0.03820374119521752
+        -0.017815256352670502,
+        0.0005721753238764519
       ],
       "detail": {
         "cyclic_triads": 493,
         "decided_triads": 14164,
-        "expected_share": 0.08572762171651933,
+        "expected_share": 0.04259474632463751,
         "observed_share": 0.034806551821519344
       },
       "innocent": [
@@ -1973,11 +1973,11 @@
         0.02
       ],
       "name": "intransitivity",
-      "reason": "493 of 14164 decided triads are cyclic (3.5%); the fitted model produces 8.6% on the same comparison budget",
+      "reason": "493 of 14164 decided triads are cyclic (3.5%); the fitted model produces 4.3% on the same comparison budget",
       "skipped": false,
       "title": "Preference cycles beyond what the fit predicts",
       "triggered": false,
-      "value": -0.05092106989499999
+      "value": -0.0077881945031181635
     },
     {
       "ci": null,
