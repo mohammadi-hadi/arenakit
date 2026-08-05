@@ -84,6 +84,39 @@ def components(comparisons: np.ndarray) -> list[list[int]]:
     return found
 
 
+class UnboundedFitError(ValueError):
+    """Raised when an unpenalised fit has no finite maximum.
+
+    Bradley-Terry has a finite maximum likelihood estimate only when the
+    win graph is strongly connected - every model must be reachable from every
+    other along a chain of victories (Ford, 1957). Otherwise some model has no
+    upper bound on its strength and the fit runs away. Use a non-zero ``prior``,
+    which is the default.
+    """
+
+
+def _strongly_connected(adjacency: np.ndarray) -> bool:
+    n = adjacency.shape[0]
+    if n <= 1:
+        return True
+    reach = (adjacency | np.eye(n, dtype=bool)).astype(np.int64)
+    for _ in range(max(1, int(np.ceil(np.log2(n))))):
+        reach = (reach @ reach > 0).astype(np.int64)
+    return bool(reach.all())
+
+
+def _require_bounded(counts: PairCounts, ties: TieRule) -> None:
+    beats = counts.wins > 0
+    if ties == "half":
+        beats = beats | (counts.ties > 0)
+    if not _strongly_connected(beats):
+        raise UnboundedFitError(
+            "no finite unpenalised fit exists: the win graph is not strongly "
+            "connected, so at least one model has no upper bound on its strength. "
+            "Use a non-zero prior (the default) or drop the models involved."
+        )
+
+
 def _require_connected(counts: PairCounts) -> None:
     groups = components(counts.comparisons)
     if len(groups) > 1:
@@ -162,6 +195,8 @@ def fit_bt(
     if ties not in ("half", "drop"):
         raise ValueError(f"unknown tie rule {ties!r}")
     _require_connected(counts)
+    if prior <= 0:
+        _require_bounded(counts, ties)
     return _fit_ordered(counts, ties, prior) if order else _fit_plain(counts, ties, prior)
 
 
@@ -238,6 +273,8 @@ def fit_rao_kupper(counts: PairCounts, prior: float = PRIOR_BATTLES) -> BTFit:
     :func:`fit_bt` with ``ties="drop"``.
     """
     _require_connected(counts)
+    if prior <= 0:
+        _require_bounded(counts, "half")
     wins = counts.wins
     tied = counts.ties
     n = counts.n_models

@@ -30,7 +30,8 @@ from .result import AuditResult
 from .schema import Arena, load_battles
 
 
-def _print_audit(audit: AuditResult, stream: TextIO = sys.stdout) -> None:
+def _print_audit(audit: AuditResult, stream: TextIO | None = None) -> None:
+    stream = sys.stdout if stream is None else stream
     print(
         f"{audit.n_battles:,} battles, {audit.n_models} models, {len(audit.triggered)} flag(s)",
         file=stream,
