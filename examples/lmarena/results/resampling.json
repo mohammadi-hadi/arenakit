@@ -1,0 +1,29 @@
+{
+  "battle": {
+    "mean_se": 0.033782398277138415,
+    "n_clusters": 106134,
+    "note": "",
+    "pairs": 54,
+    "separated": 1,
+    "separated_marginal": 5,
+    "tiers": 2
+  },
+  "item": {
+    "mean_se": 0.03369383516702194,
+    "n_clusters": 106134,
+    "note": "(every battle has its own prompt id, so this is battle resampling)",
+    "pairs": 54,
+    "separated": 1,
+    "separated_marginal": 5,
+    "tiers": 2
+  },
+  "voter": {
+    "mean_se": 0.034719454929692965,
+    "n_clusters": 49382,
+    "note": "",
+    "pairs": 54,
+    "separated": 1,
+    "separated_marginal": 5,
+    "tiers": 2
+  }
+}
