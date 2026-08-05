@@ -3,6 +3,8 @@
 Audit a pairwise model leaderboard before you trust its order.
 
 [![ci](https://github.com/mohammadi-hadi/arenakit/actions/workflows/ci.yml/badge.svg)](https://github.com/mohammadi-hadi/arenakit/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/arenakit)](https://pypi.org/project/arenakit/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21813309.svg)](https://doi.org/10.5281/zenodo.21813309)
 
 Arena leaderboards turn pairwise votes into a ranked list, and the ranked list
 is what everyone reads. But a rank is a claim, and the votes behind it support
@@ -283,6 +285,7 @@ when it does not exist.
   author  = {Mohammadi, Hadi},
   title   = {arenakit: audit a pairwise model leaderboard before you trust its order},
   year    = {2026},
+  doi     = {10.5281/zenodo.21813309},
   url     = {https://github.com/mohammadi-hadi/arenakit}
 }
 ```
