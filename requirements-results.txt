@@ -1,0 +1,6 @@
+# Pinned for the CI job that regenerates the committed demo results and fails on
+# any diff. The audit is deterministic given a seed, but "deterministic" is a
+# claim about one set of library versions, so the versions are part of it.
+numpy==2.5.1
+pydantic==2.13.4
+matplotlib==3.11.1

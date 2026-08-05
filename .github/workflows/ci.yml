@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests examples
+      - run: ruff format --check src tests examples
+      - run: mypy src
+      - run: pytest -q
+
+  results:
+    # The committed demo results are regenerated from the code and diffed. If a
+    # change moves a number, this fails until the results are regenerated with
+    # it, so the README can never quote a figure the code no longer produces.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r requirements-results.txt
+      - run: pip install -e . --no-deps
+      - run: python -m arenakit.cli demo --out results
+      - name: Fail if the committed results moved
+        run: git diff --exit-code -- results/table.md results/report.md results/demo.json
