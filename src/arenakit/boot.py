@@ -41,6 +41,9 @@ N_RESAMPLES = 2000
 SEED = 0
 #: Default two-sided error rate.
 ALPHA = 0.05
+#: Smallest standard error treated as real. Scores are order one, so anything
+#: below this is floating-point residue from a bootstrap that never varied.
+SE_FLOOR = 1e-12
 
 Cluster = Literal["battle", "item", "voter"]
 FitFn = Callable[[PairCounts], BTFit]
@@ -65,6 +68,12 @@ class _Sampler:
                 raise ValueError(f"arena has no {cluster}_id, cannot cluster on it")
             self.codes = codes
             self.n_clusters = int(codes.max()) + 1
+            if self.n_clusters < 2:
+                raise ValueError(
+                    f"cannot resample {cluster}s: the data has only {self.n_clusters} of "
+                    "them, so every resample would be the original data and every "
+                    "interval would have zero width"
+                )
 
     def weights(self, rng: np.random.Generator) -> np.ndarray:
         draw = rng.integers(0, self.n_clusters, self.n_clusters)
@@ -230,7 +239,10 @@ def separation(boot: BootstrapResult, models: list[str], alpha: float = ALPHA) -
     gap = boot.point[upper] - boot.point[lower]
     draws = boot.scores[:, upper] - boot.scores[:, lower]
     se = draws.std(axis=0, ddof=1)
-    usable = se > 0
+    # A standard error at the level of floating-point residue means the
+    # resampling never varied. Dividing by it would manufacture an enormous
+    # t-statistic out of nothing, so treat those pairs as untestable.
+    usable = se > SE_FLOOR
     t_star = np.zeros_like(draws)
     t_star[:, usable] = (draws[:, usable] - gap[usable]) / se[usable]
     observed = np.divide(gap, se, out=np.zeros_like(gap), where=usable)

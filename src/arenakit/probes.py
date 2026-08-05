@@ -57,8 +57,10 @@ INNOCENT_IMBALANCE = (0.0, 0.5)
 #: Log-odds advantage of being shown first. 0.05 is a 1.2 point swing in
 #: win rate at even strength - below anything a leaderboard reports.
 INNOCENT_POSITION = (-0.05, 0.05)
-#: Observed cyclic-triad share minus what the fitted model predicts.
-INNOCENT_CYCLE_EXCESS = (-0.02, 0.02)
+#: Observed cyclic-triad share minus what the fitted model predicts. One-sided
+#: on purpose: a board with *fewer* cycles than Bradley-Terry expects is one the
+#: model describes comfortably, which is not a finding about the ranking.
+INNOCENT_CYCLE_EXCESS = (-1.0, 0.02)
 #: Ratio of clustered to battle-level standard errors. Above this, independent
 #: resampling was materially too optimistic.
 INNOCENT_CLUSTER_INFLATION = (0.0, 1.15)
@@ -73,6 +75,10 @@ INNOCENT_ANNOTATOR_SHIFT = (0.0, 1.0)
 LOO_JUDGE_RANGE = (3, 200)
 #: Resamples used for the parametric check of the tie/cycle structure.
 PARAMETRIC_RESAMPLES = 500
+#: Fewest clusters worth resampling. Below this the bootstrap has too few
+#: distinct units to say anything, so the audit falls back to a coarser scheme
+#: and says so rather than reporting intervals it cannot support.
+MIN_CLUSTERS = 20
 
 
 @dataclass
@@ -83,6 +89,7 @@ class _Context:
     boot: BootstrapResult
     sep: Separation
     cluster: Cluster
+    cluster_note: str
     n_resamples: int
     seed: int
     alpha: float
@@ -262,9 +269,19 @@ def probe_position_bias(ctx: _Context) -> ProbeResult:
             title="Advantage of being shown first",
             skipped=True,
             reason=(
-                f"{randomisation.forward_share:.0%} of battles list the models in "
-                "name-sorted order, so the a/b assignment records which model sorts "
-                "first, not which was shown first"
+                (
+                    f"no model pair appears in both orderings "
+                    f"({randomisation.both_orders_share:.0%} of "
+                    f"{randomisation.n_pairs} pairs do), so which model sits in the "
+                    "first slot is fixed per pair and cannot be told apart from the "
+                    "models themselves"
+                )
+                if randomisation.both_orders_share < 0.2
+                else (
+                    f"{randomisation.forward_share:.0%} of battles list the models in "
+                    "name-sorted order, so the a/b assignment records which model "
+                    "sorts first, not which was shown first"
+                )
             ),
             detail={
                 "forward_share": randomisation.forward_share,
@@ -313,6 +330,7 @@ def probe_position_reordering(ctx: _Context) -> ProbeResult:
         )
     corrected = fit_bt(ctx.arena.counts(), order=True)
     flipped = _reversals(ctx.fit.scores, corrected.scores, ctx.sep)
+    at_risk = ctx.sep.n_simultaneous
     moved = int((corrected.ranks != ctx.fit.ranks).sum())
     return ProbeResult(
         name="position_reordering",
@@ -320,10 +338,14 @@ def probe_position_reordering(ctx: _Context) -> ProbeResult:
         value=float(len(flipped)),
         flagged=bool(flipped),
         reason=(
-            f"{len(flipped)} separated pair(s) reverse and {moved} model(s) change rank "
-            "once the first-position advantage is fitted out"
+            f"{len(flipped)} of the {at_risk} separated pair(s) reverse, and {moved} "
+            "model(s) change rank, once the first-position advantage is fitted out"
         ),
-        detail={"reversed_pairs": flipped, "models_changing_rank": moved},
+        detail={
+            "reversed_pairs": flipped,
+            "models_changing_rank": moved,
+            "separated_pairs_at_risk": at_risk,
+        },
     )
 
 
@@ -347,19 +369,21 @@ def probe_tie_convention(ctx: _Context) -> ProbeResult:
         name: _reversals(ctx.fit.scores, scores, ctx.sep) for name, scores in alternatives.items()
     }
     total = sum(len(v) for v in flipped.values())
+    at_risk = ctx.sep.n_simultaneous
     return ProbeResult(
         name="tie_convention",
         title="Order changes under another tie rule",
         value=float(total),
         flagged=total > 0,
         reason=(
-            f"ties are {tie_share:.1%} of battles; {total} separated pair(s) reverse when "
-            "they are dropped or modelled instead of split"
+            f"ties are {tie_share:.1%} of battles; {total} of the {at_risk} separated "
+            "pair(s) reverse when ties are dropped or modelled instead of split"
         ),
         detail={
             "tie_share": tie_share,
             "reversed_under_drop": flipped["drop"],
             "reversed_under_rao_kupper": flipped["rao_kupper"],
+            "separated_pairs_at_risk": at_risk,
             "rao_kupper_theta": fit_rao_kupper(counts).tie_theta,
         },
     )
@@ -425,7 +449,9 @@ def probe_vote_clustering(ctx: _Context) -> ProbeResult:
             name="vote_clustering",
             title="Cost of pretending votes are independent",
             skipped=True,
-            reason="no voter or item identifiers, so clustering cannot be checked",
+            reason=ctx.cluster_note
+            or "no voter or item identifiers, so clustering cannot be checked",
+            detail={"cluster_note": ctx.cluster_note},
         )
     plain = bootstrap(ctx.arena, n_resamples=ctx.n_resamples, seed=ctx.seed, cluster="battle")
     plain_sep = separation(plain, ctx.arena.models, ctx.alpha)
@@ -450,6 +476,7 @@ def probe_vote_clustering(ctx: _Context) -> ProbeResult:
         ),
         detail={
             "cluster": ctx.cluster,
+            "cluster_note": ctx.cluster_note,
             "n_clusters": ctx.boot.n_clusters,
             "se_ratio": ratio,
             "pairs_lost": int(lost),
@@ -551,12 +578,17 @@ PROBES = (
 )
 
 
-def _default_cluster(arena: Arena) -> Cluster:
-    if arena.voter is not None:
-        return "voter"
-    if arena.item is not None:
-        return "item"
-    return "battle"
+def _choose_cluster(arena: Arena) -> tuple[Cluster, str]:
+    """Pick the most conservative resampling the data can actually support."""
+    notes: list[str] = []
+    for name, codes in (("voter", arena.voter), ("item", arena.item)):
+        if codes is None:
+            continue
+        count = int(codes.max()) + 1
+        if count >= MIN_CLUSTERS:
+            return name, "; ".join(notes)  # type: ignore[return-value]
+        notes.append(f"only {count} distinct {name}s, too few to resample (needs {MIN_CLUSTERS})")
+    return "battle", "; ".join(notes)
 
 
 def run_audit(
@@ -585,7 +617,9 @@ def run_audit(
     dropped = [full.models[i] for group in groups[1:] for i in group]
     if dropped:
         arena = full.restrict(groups[0])
-    chosen: Cluster = cluster if cluster is not None else _default_cluster(arena)
+    chosen, note = _choose_cluster(arena)
+    if cluster is not None:
+        chosen, note = cluster, ""
     counts = arena.counts()
     fit = fit_bt(counts, prior=prior)
     boot = bootstrap(
@@ -603,6 +637,7 @@ def run_audit(
         boot=boot,
         sep=sep,
         cluster=chosen,
+        cluster_note=note,
         n_resamples=n_resamples,
         seed=seed,
         alpha=alpha,

@@ -91,7 +91,27 @@ def test_position_probes_skip_a_canonically_ordered_board():
     audit = run_audit(ordered, n_resamples=FAST)
     assert audit["position_bias"].skipped
     assert audit["position_reordering"].skipped
-    assert "name-sorted" in audit["position_bias"].reason
+    assert "both orderings" in audit["position_bias"].reason
+
+
+def test_position_probe_skips_a_mostly_one_sided_assignment():
+    """Pairs seen both ways round, but so lopsidedly that position is confounded."""
+    arena = simulate(n_models=5, n_battles=2000, seed=14)
+    outcomes = {0: "a", 1: "b", 2: "tie"}
+    flipped = []
+    for index, (a, b, y) in enumerate(
+        zip(arena.a.tolist(), arena.b.tolist(), arena.y.tolist(), strict=True)
+    ):
+        low, high = (a, b) if a < b else (b, a)
+        winner = outcomes[y]
+        if index % 10 == 0:  # one battle in ten keeps the original order
+            low, high = (a, b)
+        elif (a < b) != (low < high):
+            winner = {"a": "b", "b": "a", "tie": "tie"}[winner]
+        flipped.append(Battle(model_a=arena.models[low], model_b=arena.models[high], winner=winner))
+    probe = run_audit(Arena(flipped), n_resamples=FAST)["position_bias"]
+    assert probe.skipped
+    assert "name-sorted" in probe.reason
 
 
 def test_tie_probe_skips_a_board_without_ties():
@@ -145,3 +165,24 @@ def test_audit_lookup_and_serialisation():
     assert [row["rank"] for row in payload["leaderboard"]] == [1, 2, 3, 4]
     assert len({row["model"] for row in payload["leaderboard"]}) == 4
     assert payload["flags"] == audit.flags
+
+
+def test_a_single_annotator_does_not_produce_a_degenerate_audit():
+    """One annotator means resampling annotators cannot vary anything at all.
+
+    Left unchecked this yields zero-width intervals and t-statistics built from
+    floating-point residue, which read as a perfectly separated board.
+    """
+    arena = simulate(n_models=5, n_battles=1500, seed=10)
+    arena.voter = np.zeros(arena.n_battles, dtype=np.int64)
+    audit = run_audit(arena, n_resamples=FAST)
+    detail = audit["vote_clustering"].detail
+    assert detail["cluster"] == "item"  # fell back rather than resampling one voter
+    assert "too few to resample" in detail["cluster_note"]
+    widths = [row["score_ci"][1] - row["score_ci"][0] for row in audit.leaderboard]
+    assert min(widths) > 1e-6
+
+    arena.item = None
+    fallback = run_audit(arena, n_resamples=FAST)["vote_clustering"]
+    assert fallback.skipped
+    assert "too few to resample" in fallback.reason

@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from arenakit.boot import (
+    BootstrapResult,
     battles_needed,
     bootstrap,
     bootstrap_values,
@@ -122,3 +123,26 @@ def test_battles_needed_scales_with_the_square_of_the_shortfall():
     pair = {"gap": 0.1, "se": 0.1}
     assert battles_needed(pair, 1000, 2.0) == pytest.approx(4000.0)
     assert battles_needed({"gap": 0.0, "se": 0.1}, 1000, 2.0) is None
+
+
+def test_resampling_a_single_cluster_is_refused():
+    arena = simulate(n_models=4, n_battles=400, seed=10)
+    arena.voter = np.zeros(arena.n_battles, dtype=np.int64)
+    with pytest.raises(ValueError, match="only 1 of them"):
+        bootstrap(arena, n_resamples=10, cluster="voter")
+
+
+def test_a_bootstrap_that_never_varied_separates_nothing():
+    """Standard errors at float residue must not become huge t-statistics."""
+    arena = simulate(n_models=4, n_battles=600, seed=11)
+    boot = bootstrap(arena, n_resamples=20, seed=0)
+    frozen = BootstrapResult(
+        point=boot.point,
+        scores=np.repeat(boot.point[None, :], 20, axis=0),
+        ranks=boot.ranks,
+        cluster="battle",
+        n_clusters=1,
+    )
+    sep = separation(frozen, arena.models)
+    assert sep.n_simultaneous == 0
+    assert sep.n_marginal == 0

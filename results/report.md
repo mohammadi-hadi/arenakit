@@ -26,7 +26,7 @@ Being shown first is worth real odds, and one model takes that slot almost alway
 - fired: `position_bias`, `position_reordering` (as planted)
 
   - **position_bias** - the model shown first wins 69.9% of decisive battles (log-odds advantage +0.725)
-  - **position_reordering** - 1 separated pair(s) reverse and 2 model(s) change rank once the first-position advantage is fitted out
+  - **position_reordering** - 1 of the 5 separated pair(s) reverse, and 2 model(s) change rank, once the first-position advantage is fitted out
 
 ## Draw-prone model
 
@@ -35,7 +35,7 @@ One weak model draws most of its battles, and half a win each is generous.
 - planted: `tie_convention`
 - fired: `tie_convention` (as planted)
 
-  - **tie_convention** - ties are 36.0% of battles; 1 separated pair(s) reverse when they are dropped or modelled instead of split
+  - **tie_convention** - ties are 36.0% of battles; 1 of the 5 separated pair(s) reverse when ties are dropped or modelled instead of split
 
 ## Rock, paper, scissors
 
