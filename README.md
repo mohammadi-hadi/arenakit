@@ -1,6 +1,6 @@
 # arenakit
 
-Audit a pairwise model leaderboard before you trust its order.
+Bradley-Terry leaderboards with simultaneous confidence control.
 
 [![ci](https://github.com/mohammadi-hadi/arenakit/actions/workflows/ci.yml/badge.svg)](https://github.com/mohammadi-hadi/arenakit/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/arenakit)](https://pypi.org/project/arenakit/)
@@ -268,16 +268,16 @@ when it does not exist.
 
 ## Companion projects
 
-- [judgekit](https://github.com/mohammadi-hadi/judgekit) — audit an LLM judge
-  for bias before you trust its scores.
+- [judgekit](https://github.com/mohammadi-hadi/judgekit) — bias probes for LLM
+  judges, each with a bootstrap confidence interval.
 - [judgepanel](https://github.com/mohammadi-hadi/judgepanel) — estimate judge
   accuracy without gold labels.
-- [raterkit](https://github.com/mohammadi-hadi/raterkit) — audit a labeled
-  dataset before you trust it.
-- [calikit](https://github.com/mohammadi-hadi/calikit) — audit the calibration
-  of a model's probabilities.
-- [abkit](https://github.com/mohammadi-hadi/abkit) — audit an A/B test before
-  you act on it.
+- [raterkit](https://github.com/mohammadi-hadi/raterkit) — reliability,
+  rogue-rater, drift and leakage diagnostics for labelled data.
+- [calikit](https://github.com/mohammadi-hadi/calikit) — reliability diagrams,
+  ECE and Brier decomposition for a model's probabilities.
+- [abkit](https://github.com/mohammadi-hadi/abkit) — sample-ratio, peeking,
+  multiple-testing and winner's-curse checks for experiment readouts.
 
 ## Citation
 

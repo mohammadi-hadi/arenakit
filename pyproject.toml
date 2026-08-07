@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "arenakit"
 version = "0.1.0"
-description = "Audit a pairwise model leaderboard before you trust its order"
+description = "Bradley-Terry leaderboards with simultaneous confidence control"
 readme = "README.md"
 license = "MIT"
 authors = [{ name = "Hadi Mohammadi" }]

@@ -1,4 +1,4 @@
-"""Audit a pairwise model leaderboard before you trust its order."""
+"""Bradley-Terry leaderboards with simultaneous confidence control."""
 
 from .boot import BootstrapResult, Separation, bootstrap, separation
 from .bt import BTFit, DisconnectedBoardError, fit_bt, fit_rao_kupper, leaderboard, to_elo
