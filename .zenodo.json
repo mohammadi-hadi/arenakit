@@ -1,0 +1,23 @@
+{
+  "title": "arenakit: audit a pairwise model leaderboard before you trust its order",
+  "description": "Bradley-Terry leaderboards with simultaneous confidence control — across 106,134 LMArena votes only 1 of 54 neighbouring pairs survives, against 5 when each is judged on its own.",
+  "creators": [
+    {
+      "name": "Mohammadi, Hadi",
+      "orcid": "0000-0003-0860-9200",
+      "affiliation": "Utrecht University"
+    }
+  ],
+  "license": "mit",
+  "upload_type": "software",
+  "keywords": [
+    "benchmarking",
+    "bootstrap",
+    "bradley terry",
+    "leaderboard",
+    "llm evaluation",
+    "pairwise comparison",
+    "python",
+    "statistics"
+  ]
+}
