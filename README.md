@@ -1,11 +1,16 @@
-# arenakit
+<div align="center">
 
-Bradley-Terry leaderboards with simultaneous confidence control.
+# arenakit
 
 [![ci](https://github.com/mohammadi-hadi/arenakit/actions/workflows/ci.yml/badge.svg)](https://github.com/mohammadi-hadi/arenakit/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/arenakit)](https://pypi.org/project/arenakit/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21813309.svg)](https://doi.org/10.5281/zenodo.21813309)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+*Bradley-Terry leaderboards with simultaneous confidence control.*
+
+</div>
 
 Arena leaderboards turn pairwise votes into a ranked list, and the ranked list
 is what everyone reads. But a rank is a claim, and the votes behind it support
