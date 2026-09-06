@@ -271,18 +271,11 @@ when it does not exist.
 - Westfall and Young (1993), *Resampling-Based Multiple Testing* — the max-t
   idea behind the simultaneous critical value.
 
-## Companion projects
+## Part of evalstack
 
-- [judgekit](https://github.com/mohammadi-hadi/judgekit) — bias probes for LLM
-  judges, each with a bootstrap confidence interval.
-- [judgepanel](https://github.com/mohammadi-hadi/judgepanel) — estimate judge
-  accuracy without gold labels.
-- [raterkit](https://github.com/mohammadi-hadi/raterkit) — reliability,
-  rogue-rater, drift and leakage diagnostics for labelled data.
-- [calikit](https://github.com/mohammadi-hadi/calikit) — reliability diagrams,
-  ECE and Brier decomposition for a model's probabilities.
-- [abkit](https://github.com/mohammadi-hadi/abkit) — sample-ratio, peeking,
-  multiple-testing and winner's-curse checks for experiment readouts.
+[evalstack](https://github.com/mohammadi-hadi/evalstack) is the map of these
+eleven evaluation tools: what each one measures, what it found on real data,
+and the two chains that run end to end.
 
 ## Citation
 
