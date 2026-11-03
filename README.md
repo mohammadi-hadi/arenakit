@@ -6,7 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/arenakit)](https://pypi.org/project/arenakit/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21813309.svg)](https://doi.org/10.5281/zenodo.21813309)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/mohammadi-hadi/arenakit/blob/main/LICENSE)
 
 *Bradley-Terry leaderboards with simultaneous confidence control.*
 
@@ -41,9 +41,9 @@ a board here that makes it fire, and the clean board fires nothing.
 | One loud annotator | Two equally good models, and one annotator with a firm view about them. | `annotator_influence`, `separation`, `vote_clustering` |
 <!-- /arenakit:demo -->
 
-![board](results/figures/board.png)
+![board](https://raw.githubusercontent.com/mohammadi-hadi/arenakit/main/results/figures/board.png)
 
-![separation](results/figures/separation.png)
+![separation](https://raw.githubusercontent.com/mohammadi-hadi/arenakit/main/results/figures/separation.png)
 
 The two figures are the same thin board seen two ways: on the left of each, six
 models whose intervals overlap into two tiers; on the right, the gap between
@@ -51,16 +51,16 @@ each pair of neighbours measured against the evidence needed to call it real —
 once on its own, and once with the whole board's worth of comparisons taken into
 account.
 
-`make results` regenerates the table, the [full report](results/report.md) and
+`make results` regenerates the table, the [full report](https://github.com/mohammadi-hadi/arenakit/blob/main/results/report.md) and
 the figures from fixed seeds. CI rebuilds them from pinned dependencies and
 fails if a committed number differs from what the code produces.
 
 ## 106,134 real arena votes, audited
 
-[`examples/lmarena/`](examples/lmarena/) audits the public
+[`examples/lmarena/`](https://github.com/mohammadi-hadi/arenakit/tree/main/examples/lmarena) audits the public
 [LMArena preference sample](https://huggingface.co/datasets/lmarena-ai/arena-human-preference-100k):
 106,134 human votes over 55 models. Committed results:
-[examples/lmarena/results/lmarena.md](examples/lmarena/results/lmarena.md).
+[examples/lmarena/results/lmarena.md](https://github.com/mohammadi-hadi/arenakit/blob/main/examples/lmarena/results/lmarena.md).
 
 - **1 of 54 neighbouring pairs is separated** once the 54 comparisons are
   controlled for together; 5 are separated judged one at a time. Only the top
@@ -92,11 +92,11 @@ fails if a committed number differs from what the code produces.
 
 ## The same six models, judged by people and by GPT-4
 
-[`examples/mtbench/`](examples/mtbench/) audits both halves of
+[`examples/mtbench/`](https://github.com/mohammadi-hadi/arenakit/tree/main/examples/mtbench) audits both halves of
 [MT-Bench's judgments](https://huggingface.co/datasets/lmsys/mt_bench_human_judgments):
 3,355 votes from 65 people, and 2,400 verdicts from GPT-4 acting as a judge, on
 the same models and the same questions. Committed results:
-[examples/mtbench/results/mtbench.md](examples/mtbench/results/mtbench.md).
+[examples/mtbench/results/mtbench.md](https://github.com/mohammadi-hadi/arenakit/blob/main/examples/mtbench/results/mtbench.md).
 
 - **GPT-4 changes its mind on 15.8% of pairs when the two answers swap places.**
   That figure is not estimated here; the split records those cases explicitly,
@@ -167,7 +167,7 @@ print(to_elo(fit.scores)) # the same scores in the usual leaderboard units
 | `annotator_influence` | Is one annotator moving the board? | dropping one shifts a model by a whole rung of the ladder |
 
 Thresholds are named constants in
-[`src/arenakit/probes.py`](src/arenakit/probes.py); the table above is a
+[`src/arenakit/probes.py`](https://github.com/mohammadi-hadi/arenakit/blob/main/src/arenakit/probes.py); the table above is a
 description of that file, not a second source of truth. A probe that cannot
 answer its question says so and skips — for instance, the position probes stand
 down when the data records which model *sorts* first rather than which was
