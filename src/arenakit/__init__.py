@@ -7,7 +7,7 @@ from .result import AuditResult, ProbeResult
 from .schema import Arena, Battle, load_battles
 from .synthetic import simulate
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     "Arena",
